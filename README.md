@@ -52,7 +52,7 @@
                 400GB * 365 * 5 (years)  ~= 730TB
 
 
-#### High level syste design 
+#### High level system design 
 
             
 <p align="center">
@@ -92,6 +92,7 @@
             - from : fk (user_id)
             - to: fk (user_id)  
 
+<<<<<<< HEAD
 ## Detailed System design 
 
         - uploading photos and images can be a slow process as opposed to reads,
@@ -103,3 +104,6 @@
         <img src="assets/detailed_system_design.png">
         <br/>
 </p>
+=======
+## Detailed System design
+>>>>>>> e2dffe439d80bd8d7af78fdbee55ac2c962a7f8a
