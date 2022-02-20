@@ -54,7 +54,10 @@
 
 #### High level syste design 
 
-            ![high level system design](assets/high_level_design.png)
+            
+            <p align="center">
+                <img src="asstes/high_level_design_.png">
+            </p>
 
 #### Data model 
 
