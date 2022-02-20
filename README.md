@@ -56,7 +56,7 @@
 
             
 <p align="center">
-        <img src="assets/high_level_design_.png">
+        <img src="assets/high_level_design.png">
         <br/>
 </p>
 
