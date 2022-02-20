@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
     'djoser', 
     'corsheaders'
     'drf_spectacular', 
+    'django-storages',
     #
     'app', 
 ]
@@ -69,6 +71,25 @@ DJOSER = {
     }
 }
 
+# OBJECT STORAGE CONFIGURATION 
+AWS_ACCESS_KEY_ID = 'your-spaces-access-key' 
+AWS_SECRET_ACCESS_KEY = 'your-spaces-secret-access-key' 
+AWS_STORAGE_BUCKET_NAME = 'your-storage-bucket-name' 
+AWS_S3_ENDPOINT_URL = 'https://nyc3.digitaloceanspaces.com'
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_LOCATION = 'photos'
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/4.0/howto/static-files/
+STATICFILES_DIRS = [
+    BASE_DIR/'instagram/static',
+]
+
+STATIC_URL = f'https://{AWS_S3_ENDPOINT_URL}/{AWS_LOCATION}'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -91,8 +112,8 @@ if not DEBUG:
 CORS_ALLOWED_ORIGINS = [
     "https://localhost:3000", 
     "http://localhost:3000", 
-    "https://web.pystagram.com", 
-    "http://web.pystagram.com",
+    "https://www.pystagram.com", 
+    "http://www.pystagram.com",
 ]
 
 TEMPLATES = [
@@ -156,10 +177,8 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'static/'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

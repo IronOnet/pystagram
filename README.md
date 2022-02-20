@@ -104,6 +104,9 @@
         <img src="assets/detailed_system_design.png">
         <br/>
 </p>
-=======
+
+
 ## Detailed System design
+
+
 
