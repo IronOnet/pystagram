@@ -92,7 +92,7 @@
             - from : fk (user_id)
             - to: fk (user_id)  
 
-<<<<<<< HEAD
+
 ## Detailed System design 
 
         - uploading photos and images can be a slow process as opposed to reads,
@@ -106,4 +106,4 @@
 </p>
 =======
 ## Detailed System design
->>>>>>> e2dffe439d80bd8d7af78fdbee55ac2c962a7f8a
+
