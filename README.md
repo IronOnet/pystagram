@@ -92,4 +92,14 @@
             - from : fk (user_id)
             - to: fk (user_id)  
 
-## Detailed System design
+## Detailed System design 
+
+        - uploading photos and images can be a slow process as opposed to reads,
+         normally in real world scenarios we will have to implement two services
+         one to deal with reads and the other writes but for the sake of shortness we
+         will bundle both services in a monolith we can even add a task queue between the database and the api server to handle upload tasks
+
+<p align="center">
+        <img src="assets/detailed_system_design.png">
+        <br/>
+</p>
