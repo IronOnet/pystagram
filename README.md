@@ -52,7 +52,7 @@
                 400GB * 365 * 5 (years)  ~= 730TB
 
 
-#### High level syste design 
+#### High level system design 
 
             
 <p align="center">
