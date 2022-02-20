@@ -37,7 +37,37 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #
+    'rest_framework', 
+    'rest_framework.auth_token',
+    'djoser', 
+    'corsheaders'
+    'drf_spectacular', 
+    #
+    'app', 
 ]
+
+# DRF CONF 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication', 
+    ), 
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}
+
+# DJOSER conf 
+DJOSER = {
+    "USER_ID_FIELD": "username", 
+    "LOGIN_FIELD":"email", 
+    "SEND_ACTIVATION_EMAIL": False, 
+    "ACTIVATION_URL": "activate/{uid}/{token}", 
+    "PASSWORD_RESET_CONFIRM_URL": "reset_password/{uid}/{token}", 
+    "SERIALIZERS": {
+        'token_create': None
+    }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -50,6 +80,20 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'instagram.urls'
+
+EMAIL_BACKEND = None 
+SITE_NAME = "pystagram" 
+DOMAIN = "localhost:3000" 
+if not DEBUG: 
+    PROTOCOL ="https" 
+    DOMAIN = "api.pystagram.com"  
+
+CORS_ALLOWED_ORIGINS = [
+    "https://localhost:3000", 
+    "http://localhost:3000", 
+    "https://web.pystagram.com", 
+    "http://web.pystagram.com",
+]
 
 TEMPLATES = [
     {
