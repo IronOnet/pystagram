@@ -28,6 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Base class for user Authentication 
+AUTH_USER_MODEL = 'app.User'
 
 # Application definition
 
@@ -40,11 +42,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     #
     'rest_framework', 
-    'rest_framework.auth_token',
+    'rest_framework.authtoken',
     'djoser', 
-    'corsheaders'
+    'corsheaders',
     'drf_spectacular', 
-    'django-storages',
+
     #
     'app', 
 ]
@@ -56,7 +58,12 @@ REST_FRAMEWORK = {
     ), 
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-    ]
+    ], 
+
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema', 
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination', 
+    'PAGE_SIZE': 100, 
+    'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
 }
 
 # DJOSER conf 
@@ -69,6 +76,11 @@ DJOSER = {
     "SERIALIZERS": {
         'token_create': None
     }
+}
+
+# Json WEB token AUTH (related to djoser.urls.jwt)
+SIMPLE_JWT = {
+    'AUTH_HEADER_TYPES': ('JWT', ),
 }
 
 # OBJECT STORAGE CONFIGURATION 
@@ -87,7 +99,7 @@ STATICFILES_DIRS = [
     BASE_DIR/'instagram/static',
 ]
 
-STATIC_URL = f'https://{AWS_S3_ENDPOINT_URL}/{AWS_LOCATION}'
+STATIC_URL = '/static/'
 STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 MIDDLEWARE = [

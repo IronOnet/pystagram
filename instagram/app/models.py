@@ -36,7 +36,7 @@ class Post(models.Model):
     medial_latitude = models.IntegerField() 
     user_longitude = models.IntegerField() 
     user_latitude = models.IntegerField() 
-    comments = models.ForeignKey('User', on_delete=models.CASCADE)
+    comments = models.ForeignKey('Comment', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True) 
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -64,7 +64,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserAccountManager() 
 
     USERNAME_FIELD = 'email' 
-    REQUIRED_FIELDS = ['username', 'email']
+    REQUIRED_FIELDS = ['username', 'password']
 
     def __str__(self): 
         return self.email
