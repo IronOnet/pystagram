@@ -2,10 +2,31 @@ from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
 class UserAccountManager(BaseUserManager): 
-    pass
+    # this is the command that gets executed whenever you 
+    # create a new user from the CLI 
+    def create_user(self, email, password=None, **extra_fields): 
+        if not email: 
+            raise ValueError("Users mus have an email address") 
+        
+        email = self.normalize_email(email) 
+        user = self.model(email=email, **extra_fields) 
 
-class BaseUser(AbstractBaseUser, PermissionsMixin): 
-    pass
+        user.set_password(password) 
+        user.save() 
+        return user 
+
+    def create_superuser(self, email, password=None, **extra_fields): 
+        extra_fields.setdefault('is_staff', True) 
+        extra_fields.setdefault('is_superuser', True) 
+        extra_fields.setdefault('is_active', True) 
+
+        if extra_fields.get('is_staff') is not True: 
+            raise ValueError('Superuser must have "is_staff=True".') 
+        if extra_fields.get('is_superuser') is not True: 
+            raise ValueError('Superuser must have is_superuser=True') 
+        return self.create_user(email, password, **extra_fields)
+
+
 
 # Create your models here.
 class Post(models.Model): 
@@ -19,11 +40,44 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True) 
     updated_at = models.DateTimeField(auto_now=True)
 
-class User(models.Model): 
-    pass 
+class User(AbstractBaseUser, PermissionsMixin): 
+    ADMIN = "ADMIN" 
+    USER = "USER" 
+    ROLES = (
+        (ADMIN, "Admin"), 
+        (USER, "User")
+    )
+
+    email = models.EmailField(max_length=255, unique=True, null=False) 
+    username = models.CharField(max_length=255, unique=True, null=False)
+    first_name = models.CharField(max_length=255, null=False) 
+    last_name = models.CharField(max_length=255, unique=True, null=False)
+    password = models.CharField(max_length=255, null=False, blank=False) 
+    is_admin = models.BooleanField(default=False) 
+    is_active = models.BooleanField(default=False) 
+    is_staff = models.BooleanField(default=False) 
+    last_login = models.DateTimeField(auto_now=True) 
+    role = models.CharField(choices=ROLES, default="User", max_length=255) 
+    created_at = models.DateTimeField(auto_now_add=True) 
+    updated_at = models.DateTimeField(auto_now=True)  
+
+    objects = UserAccountManager() 
+
+    USERNAME_FIELD = 'email' 
+    REQUIRED_FIELDS = ['username', 'email']
+
+    def __str__(self): 
+        return self.email
+    
 
 class Comment(models.Model): 
     pass 
 
 class Follow(models.Model): 
     pass
+
+class UserProfile(models.Model): 
+    pass
+
+class Photo(models.Model):
+    pass 
