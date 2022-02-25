@@ -30,8 +30,16 @@ class UserAccountManager(BaseUserManager):
 
 # Create your models here.
 class Post(models.Model): 
+    
+    VIDEO = 'VIDEO' 
+    PHOTO = 'PHOTO'
+    MEDIA_TYPES = (
+        (VIDEO, 'Video'),
+        (PHOTO, 'Photo')
+    )
     user_id = models.ForeignKey('User', on_delete=models.Case, null=False) 
     media_url = models.CharField(max_length=256, null=False)
+    media_type = models.CharField(max_length=50, choices=MEDIA_TYPES, null=False)
     media_longitude = models.IntegerField() 
     medial_latitude = models.IntegerField() 
     user_longitude = models.IntegerField() 
@@ -71,13 +79,31 @@ class User(AbstractBaseUser, PermissionsMixin):
     
 
 class Comment(models.Model): 
-    pass 
+    post_id = models.ForeignKey('Post', on_delete=models.CASCADE, null=False) 
+    content = models.CharField(max_length=255, null=False)
+    created_at = models.DateTimeField(auto_now_add=True) 
+    updated_at = models.DateTimeField(auto_now=True)
 
-class Follow(models.Model): 
-    pass
+class Following(models.Model): 
+    # TODO: Fix this self reference error
+    target = models.ForeignKey('User', on_delete=models.CASCADE, null=False, related_name="followers") 
+    follower = models.ForeignKey('User', on_delete=models.CASCADE, null=False, related_name="targets")
+    created_at = models.DateTimeField(auto_now_add=True) 
+    updated_at = models.DateTimeField(auto_now=True)
 
 class UserProfile(models.Model): 
-    pass
+    user_id = models.ForeignKey('User', on_delete=models.CASCADE, null=False) 
+    bio = models.CharField(max_length=144) 
+    created_at = models.DateTimeField(auto_now_add=True) 
+    updated_at = models.DateTimeField(auto_now=True)
 
-class Photo(models.Model):
-    pass 
+class Bookmark(models.Model):
+    post_id = models.ForeignKey('Post', on_delete=models.CASCADE, null=False) 
+    created_at = models.DateTimeField(auto_now_add=True) 
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Tag(models.Model): 
+    post_id = models.ForeignKey('Post', on_delete=models.CASCADE, null=False) 
+    text = models.CharField(max_length=50, null=False) 
+    created_at = models.DateTimeField(auto_now_add=True) 
+    updated_at = models.DateTimeField(auto_now=True)
