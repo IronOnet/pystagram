@@ -1,7 +1,7 @@
 
 from rest_framework.serializers import ModelSerializer
 
-from instagram.app.models import (Bookmark, Following, Post,\
+from instagram.app.models import (Bookmark, Following, Like, Post,\
      Tag, User, Comment, UserProfile)
 
 class PostSerializer(ModelSerializer): 
@@ -39,6 +39,11 @@ class TagSerializer(ModelSerializer):
     class Meta: 
         model = Tag
         fields = ['post_id', 'text']
+
+class LikeSerializer(ModelSerializer): 
+    class Meta: 
+        model = Like 
+        fields = ['post_id', 'user_id']
 
 
 

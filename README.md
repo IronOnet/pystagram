@@ -88,9 +88,29 @@
             - last_login: datetime
 
 
-        * Follow: 
+        * Following: 
             - from : fk (user_id)
             - to: fk (user_id)  
+
+        * Tag
+          - title 
+
+        * Tag_Photo
+           - tag_id 
+           - post_id 
+
+        * Likes
+          * user_id 
+          * type
+          * timestamp
+          * post_id
+
+        * Location: 
+          * id 
+          * name (varchar 200)
+          * shortname (varchar 50)
+         
+
 
 
 ## Detailed System design 
