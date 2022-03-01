@@ -43,7 +43,7 @@ class PostViewSet(ModelViewSet):
         post = self.get_object() 
         obj, created = Like.objects.get_or_create(
             user=request.user, 
-            post=post,
+            post_id=post,
         )
 
         if not created: 
@@ -63,3 +63,30 @@ class PostViewSet(ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
+
+
+class CommentViewSet(ModelViewSet): 
+    permission_classes = [IsAuthenticated] 
+    query_set = Comment.objects.all() 
+    serializer_class = CommentSerializer 
+
+class UserViewSet(ModelViewSet): 
+    permission_classes = [IsAuthenticated] 
+    query_set = User.objects.all() 
+    serializer_class = UserSerializer 
+
+class TagViewSet(ModelViewSet): 
+    permission_classes = [IsAuthenticated] 
+    query_set = Tag.objects.all() 
+    serializer_class = TagSerializer 
+
+
+class FollowingViewSet(ModelViewSet): 
+    permission_classes = [IsAuthenticated]
+    query_set = Following.objects.all() 
+    serializer_class = FollowingSerializer 
+
+class UserProfileViewSet(ModelViewSet): 
+    permission_classes = [IsAuthenticated] 
+    query_set = Following.objects.all() 
+    serializer_class = UserProfileSerializer
