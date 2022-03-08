@@ -1,14 +1,18 @@
 
+from django.db import models
+from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from instagram.app.models import (Bookmark, Following, Like, Post,\
-     Tag, User, Comment, UserProfile)
+from app.models import (Bookmark, Following, Like, Photo, Post,\
+     Tag, User, Comment, UserProfile, Video)
 
 class PostSerializer(ModelSerializer): 
+    images = serializers.ListField(child=serializers.ImageField()) 
+
     class Meta: 
         model = Post 
         fields = ['user_id', 'media_url', 'media_type', 'media_longitude', 'media_latitude',\
-            'user_longitude', 'user_latitude', 'comments']
+            'user_longitude', 'user_latitude', 'comments', 'video', 'photos']
 
 class UserSerializer(ModelSerializer): 
     class Meta: 
@@ -28,7 +32,7 @@ class FollowingSerializer(ModelSerializer):
 class UserProfileSerializer(ModelSerializer): 
     class Meta: 
         model = UserProfile 
-        fiels = ['user_id', 'bio']
+        fields = ['user_id', 'bio']
 
 class BookmarkSerializer(ModelSerializer): 
     class Meta: 
@@ -40,10 +44,20 @@ class TagSerializer(ModelSerializer):
         model = Tag
         fields = ['post_id', 'text']
 
+
 class LikeSerializer(ModelSerializer): 
     class Meta: 
         model = Like 
-        fields = ['post_id', 'user_id']
+        fields = ['user_id', 'post_id', 'is_liked']
 
+class PhotoSerializer(ModelSerializer): 
+    class Meta: 
+        model = Photo 
+        fields = ['uid', 'content', 'user_id']
+
+class VideoSerializer(ModelSerializer): 
+    class Meta: 
+        model = Video 
+        fields = ['uid', 'content', 'user_id']
 
 

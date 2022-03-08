@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
+import environ
+
+# Intialize environment variables 
+#env = environ.Env() 
+environ.Env().read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -86,24 +91,29 @@ SIMPLE_JWT = {
 # OBJECT STORAGE CONFIGURATION 
 AWS_ACCESS_KEY_ID = 'your-spaces-access-key' 
 AWS_SECRET_ACCESS_KEY = 'your-spaces-secret-access-key' 
-AWS_STORAGE_BUCKET_NAME = 'your-storage-bucket-name' 
+AWS_STORAGE_BUCKET_NAME = 'pystagram-static' 
 AWS_S3_ENDPOINT_URL = 'https://nyc3.digitaloceanspaces.com'
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
-AWS_LOCATION = 'photos'
+AWS_LOCATION = 'static'
+
+AWS_CLOUDFRONT_KEY = os.environ.get('AWS_CLOUDFRONT_KEY', None).encode('ascii') 
+AWS_CLOUDFRONT_KEY_ID = os.environ.get('AWS_CLOUDFRONT_KEY_ID', None)
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-STATIC_URL = '/static/'
+STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'pystagram/static'),
 ]
 
 
 # This to upload our media to and S3 like storage bucket 
-DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+#DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+DEFAULT_FILE_STORAGE = "app.storage_backends.MediaStorage"
 
 # storage backends config
 STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'

@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
 class UserAccountManager(BaseUserManager): 
@@ -37,16 +38,36 @@ class Post(models.Model):
         (VIDEO, 'Video'),
         (PHOTO, 'Photo')
     )
-    user_id = models.ForeignKey('User', on_delete=models.Case, null=False) 
-    media_url = models.CharField(max_length=256, null=False)
-    media_type = models.CharField(max_length=50, choices=MEDIA_TYPES, null=False)
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False) 
+    #media_url = models.CharField(max_length=256, null=False)
+    #media_type = models.CharField(max_length=50, choices=MEDIA_TYPES, null=False)
+    photo = models.ManyToManyField('Photo') 
+    video = models.ForeignKey('Video')
     media_longitude = models.IntegerField() 
-    medial_latitude = models.IntegerField() 
+    media_latitude = models.IntegerField() 
     user_longitude = models.IntegerField() 
     user_latitude = models.IntegerField() 
-    comments = models.ForeignKey('Comment', on_delete=models.CASCADE)
+    likes = models.ManyToManyField('Like')
+    comments = models.ManyToManyField('Comment')
     created_at = models.DateTimeField(auto_now_add=True) 
     updated_at = models.DateTimeField(auto_now=True)
+
+
+
+class Photo(models.Model): 
+    uid = models.UUIDField()  
+    content = models.ImageField(upload_to='photos') 
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
+    created_at = models.DateTimeField(auto_now_add=True) 
+    updated_at = models.DateTimeField(auto_now=True)
+
+class Video(models.Model): 
+    uid = models.UUIDField() 
+    content = models.FileField(upload_to='videos') 
+    user_id = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=False)
+    created_at = models.DateTimeField(auto_now_add=True) 
+    updated_at = models.DateTimeField(auto_now=True)
+
 
 class User(AbstractBaseUser, PermissionsMixin): 
     ADMIN = "ADMIN" 
@@ -80,14 +101,16 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Comment(models.Model): 
     post_id = models.ForeignKey('Post', on_delete=models.CASCADE, null=False) 
+    user_id = models.ForeignKey('User', on_delete=models.CASCADE, null=False)
     content = models.CharField(max_length=255, null=False)
+    reply = models.ForeignKey('Comment', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True) 
     updated_at = models.DateTimeField(auto_now=True)
 
 class Like(models.Model): 
     post_id = models.ForeignKey('Post', on_delete=models.CASCADE) 
     user_id = models.ForeignKey('User', on_delete=models.CASCADE) 
-    is_active = models.BooleanField(default=True) 
+    is_liked = models.BooleanField(default=False) 
     created_at = models.DateTimeField(auto_now_add=True) 
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -101,6 +124,7 @@ class Following(models.Model):
 class UserProfile(models.Model): 
     user_id = models.ForeignKey('User', on_delete=models.CASCADE, null=False) 
     bio = models.CharField(max_length=144) 
+    is_private = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True) 
     updated_at = models.DateTimeField(auto_now=True)
 

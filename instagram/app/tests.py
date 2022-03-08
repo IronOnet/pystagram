@@ -40,5 +40,19 @@ class UserTestSuite(TestCase):
         pass
 
 class UploadPhotoTestSuite(TestCase): 
-    pass  
+    
+    def test_like_post(self): 
+        pass 
+
+    def test_comment_post(self): 
+        pass 
+
+    def test_create_post(self): 
+        pass 
+
+    def test_update_post(self):
+        pass 
+
+    def test_delete_post(self): 
+        pass 
 
