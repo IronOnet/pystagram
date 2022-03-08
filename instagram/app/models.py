@@ -42,7 +42,7 @@ class Post(models.Model):
     #media_url = models.CharField(max_length=256, null=False)
     #media_type = models.CharField(max_length=50, choices=MEDIA_TYPES, null=False)
     photo = models.ManyToManyField('Photo') 
-    video = models.ForeignKey('Video')
+    video = models.ForeignKey('Video', on_delete=models.CASCADE)
     media_longitude = models.IntegerField() 
     media_latitude = models.IntegerField() 
     user_longitude = models.IntegerField() 
@@ -103,7 +103,7 @@ class Comment(models.Model):
     post_id = models.ForeignKey('Post', on_delete=models.CASCADE, null=False) 
     user_id = models.ForeignKey('User', on_delete=models.CASCADE, null=False)
     content = models.CharField(max_length=255, null=False)
-    reply = models.ForeignKey('Comment', on_delete=models.CASCADE)
+    reply = models.ManyToManyField('Comment')
     created_at = models.DateTimeField(auto_now_add=True) 
     updated_at = models.DateTimeField(auto_now=True)
 
