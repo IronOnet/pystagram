@@ -10,9 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
+import json
 from pathlib import Path
 import os
 import environ
+import logging.config
 
 # Intialize environment variables 
 #env = environ.Env() 
@@ -26,12 +28,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-9q1fq!vnj1=1yf8a)e+_9corb8wr(p50ns_ms9d=8ik+g2(8+^'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DJANGO_DEBUG', True)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '127.0.0.1').split(',')
 
 # Base class for user Authentication 
 AUTH_USER_MODEL = 'app.User'
@@ -51,6 +53,7 @@ INSTALLED_APPS = [
     'djoser', 
     'corsheaders',
     'drf_spectacular', 
+    'storages',
 
     #
     'app', 
@@ -89,15 +92,17 @@ SIMPLE_JWT = {
 }
 
 # OBJECT STORAGE CONFIGURATION 
-AWS_ACCESS_KEY_ID = 'your-spaces-access-key' 
-AWS_SECRET_ACCESS_KEY = 'your-spaces-secret-access-key' 
-AWS_STORAGE_BUCKET_NAME = 'pystagram-static' 
-AWS_S3_ENDPOINT_URL = 'https://nyc3.digitaloceanspaces.com'
+AWS_ACCESS_KEY_ID = os.getenv('STATIC_ACCESS_KEY_ID', 'your_aws_key_id') 
+AWS_SECRET_ACCESS_KEY = os.getenv('STATIC_SECRET_ACCESS_KEY', 'you_secret_access_key')
+AWS_STORAGE_BUCKET_NAME = os.getenv('STATIC_BUCKET_NAME', 'you_static_bucket_name')
+AWS_S3_ENDPOINT_URL = os.getenv('STATIC_ENDPOINT_URL', 'your_static_endpoint_url')
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+
 AWS_S3_OBJECT_PARAMETERS = {
     'CacheControl': 'max-age=86400',
 }
 AWS_LOCATION = 'static'
+AWS_DEFAULT_ACL = 'public-read'
 
 AWS_CLOUDFRONT_KEY = os.environ.get('AWS_CLOUDFRONT_KEY', None).encode('ascii') 
 AWS_CLOUDFRONT_KEY_ID = os.environ.get('AWS_CLOUDFRONT_KEY_ID', None)
@@ -116,7 +121,13 @@ STATICFILES_DIRS = [
 DEFAULT_FILE_STORAGE = "app.storage_backends.MediaStorage"
 
 # storage backends config
-STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+if DEBUG == True: 
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+else: 
+    STATIC_URL = f'{AWS_S3_ENDPOINT_URL}/{AWS_LOCATION}'
+    STATIC_ROOT = 'static/'
+    STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    DEFAULT_FILE_STORAGE = 'app.storage_backends.MediaStorage'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -168,8 +179,15 @@ WSGI_APPLICATION = 'instagram.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.{}'.format(os.getenv('DATABASE_ENGINE', 'sqlite3')),
+        'NAME': os.getenv('DATABASE_NAME', BASE_DIR / 'db.sqlite3'),
+        'USER': os.getenv('DATABASE_USERNAME', 'pystagramuser'), 
+        'PASSWORD': os.getenv('DATABASE_PASSWORD', 'password'), 
+        'HOST': os.getenv('DATABASE_HOST', '127.0.0.1'), 
+        'PORT': os.getenv('DATABASE_PORT', 5432), 
+        'OPTIONS': json.loads(
+            os.getenv('DATABASE_OPTIONS', '{}')
+        ),
     }
 }
 
@@ -212,3 +230,34 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Logging Configuration 
+# Clear Prev Config 
+LOGGING_CONFIG = None 
+
+# Get loglevel from env 
+LOGLEVEL = os.getenv('DJANGO_LOGLEVEL', 'info').upper() 
+
+logging.config.dictConfig({
+    'version': 1, 
+    'disable_existing_loggers': False, 
+    'formatters': {
+        'console': {
+            'format': '%(asctime)s %(levelname)s [%(name)s:%(lineno)s] %(module)s %(process)d %(message)s',
+
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler', 
+            'formatter': 'console',
+        },
+    },
+    'loggers':{
+        '': {
+            'level': LOGLEVEL, 
+            'handlers': ['console', ],
+        }
+    }
+})

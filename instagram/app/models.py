@@ -141,3 +141,10 @@ class Tag(models.Model):
 
     def __str__(self): 
         return self.text
+
+
+class UserFeed(models.Model): 
+    user_id = models.ForeignKey('User', null=False) 
+    posts = models.ManyToManyField('Post', null=False)
+    created_at = models.DateTimeField(auto_now_add=True) 
+    updated_at = models.DateTimeField(auto_now=True)

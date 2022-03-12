@@ -1,5 +1,7 @@
 from crypt import methods
+from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
+from rest_framework.views import View
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import (IsAuthenticated, IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
@@ -25,10 +27,13 @@ from app.serializers import (
 )
 
 
+from app.permissions import IsAuthorOrReadOnly
+
+
 # Handling scenario User can CRUD a Post
 
 class PostViewSet(ModelViewSet): 
-    permission_classes = [IsAuthenticated] 
+    permission_classes = [IsAuthenticated, IsAuthorOrReadOnly] 
     queryset = Post.objects.all()
     serializer_class = PostSerializer 
     like_serializer_class = LikeSerializer
@@ -66,21 +71,42 @@ class PostViewSet(ModelViewSet):
             post_id = post.id
         )
 
+        if not created: 
+            pass  
+
+        return Response(obj.data)
+
     
 
         
 
     def list(self, request, *args, **kwargs): 
-        pass 
+        # List Posts made
+        queryset = Post.objects.all() 
+        serializer = PostSerializer(queryset, many=True) 
+        return Response(serializer.data)
 
     def update(self, request): 
-        pass
+        instance = self.get_object() 
+        serializer = PostSerializer(instance=instance,
+        data=request.data)
+        serializer.is_valid(raise_exception=True) 
+        serializer.save() 
+        return Response(serializer.data)
 
     def create(self, request, *args, **kwargs): 
-        pass 
+        serializer = PostSerializer(data=request.data) 
+        serializer.is_valid(raise_exception=True) 
+        serializer.save() 
+        return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
         return super().destroy(request, *args, **kwargs)
+    
+
+
+class UserFeedView(View): 
+    pass 
 
 
 class CommentViewSet(ModelViewSet): 

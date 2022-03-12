@@ -4,15 +4,14 @@ from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
 from app.models import (Bookmark, Following, Like, Photo, Post,\
-     Tag, User, Comment, UserProfile, Video)
+     Tag, User, Comment, UserFeed, UserProfile, Video)
 
 class PostSerializer(ModelSerializer): 
-    images = serializers.ListField(child=serializers.ImageField()) 
+   
 
     class Meta: 
         model = Post 
-        fields = ['user_id', 'media_url', 'media_type', 'media_longitude', 'media_latitude',\
-            'user_longitude', 'user_latitude', 'comments', 'video', 'photos']
+        fields = '__all__'
 
 class UserSerializer(ModelSerializer): 
     class Meta: 
@@ -59,5 +58,11 @@ class VideoSerializer(ModelSerializer):
     class Meta: 
         model = Video 
         fields = ['uid', 'content', 'user_id']
+
+    
+class UserFeedSerializer(ModelSerializer): 
+    class Meta: 
+        model = UserFeed 
+        fields = '__all__'
 
 
