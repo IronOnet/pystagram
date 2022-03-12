@@ -1,0 +1,54 @@
+version: '3' 
+
+services:
+  pystagram: 
+    build: . 
+    volumes:
+      - static_volume:/opt/services/pystagram/static
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    networks:
+      - nginx_network 
+
+  nginx: 
+    image: nginx:alpine 
+    container_name: webserver
+    restart: unless-stopped
+    tty: true 
+    ports:
+      - 80:80 
+      - 443:443 
+    volumes:
+      - ./config/nginx/conf.d:/etc/nginx/conf.d
+      - static_volume:/opt/services/pystagram/static
+    depends_on:
+      - pystagram
+    networks:
+      - nginx_network
+
+  # Database service Postgress 
+  db: 
+    image: postgres:13.0-alpine 
+    container_name: db 
+    restart: unless-stopped 
+    tty: true 
+    ports:
+      - 5432:5432
+    volumes: 
+      - dbdata:/var/lib/postgresql/data/ 
+    environment: 
+      - POSTGRES_USER=admin_pystagram 
+      - POSTGRES_PASSWORD=password123 
+      - POSTGRES_DB=pystagram_db
+
+
+
+networks: 
+  nginx_network: 
+    driver: bridge 
+
+volumes: 
+  static_volume: 
+  dbdata: 
