@@ -16,3 +16,13 @@ root.render(
 // ==> React loading skeleton 
 
 
+// folder structure 
+// -> components 
+// -> constants 
+// -> helpers 
+// -> hooks
+// -> pages
+// -> lib (axios)
+// -> services (axios too) 
+
+
