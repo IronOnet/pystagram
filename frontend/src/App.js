@@ -1,17 +1,37 @@
 import {lazy, Suspense } from "react"; 
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import * as ROUTES_C from './constants/routes';
+import Login from './pages/login.js'; 
+import TestPageView from "./pages/test.js";
 
-const Login = lazy(() => import('./pages/login'));
+
+
+
+const Index = () =>{
+  return <h1>Hello Crazy World!!!</h1>
+}
+
+const TestView = () =>{
+  return (<h1>Testing View!!</h1>)
+}
+
+//const Login = lazy(() =>require('./pages/login'));
+
+//const ViewTest = lazy(()=> require('./pages/test'));
+
 
 function App() {
   return (
    <Router>
-      <Suspense fallbazck={<p>Loading...</p>}>
-        <Routes>
-          <Route path={ROUTES_C.LOGIN} component={Login} />
-        </Routes>
-      </Suspense>
+     <Suspense fallback={<p>Loading...</p>}>
+       <Routes>
+         <Route path="/" element={<Index/>}/>
+         <Route path="/login" element={<Login/>}/>
+        
+         <Route path="/test2" element={<TestPageView/>}/>
+        
+       </Routes>
+     </Suspense>
    </Router>
   );
 }
