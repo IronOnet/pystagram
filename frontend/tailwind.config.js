@@ -1,6 +1,7 @@
 module.exports = {
   content: [
     "./src/**/*.{js, jsx, ts, tsx}",
+    "./node_modules/flowbite/**/*.js"
   ],
   
 
@@ -35,6 +36,10 @@ module.exports = {
     extend:{
       display: ['group-hover']
     }
-  }
+  },
+
+  plugins:[
+    require('flowbite/plugin')
+  ]
 };
 

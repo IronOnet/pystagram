@@ -104,7 +104,7 @@ AWS_S3_OBJECT_PARAMETERS = {
 AWS_LOCATION = 'static'
 AWS_DEFAULT_ACL = 'public-read'
 
-AWS_CLOUDFRONT_KEY = os.environ.get('AWS_CLOUDFRONT_KEY', None).encode('ascii') 
+AWS_CLOUDFRONT_KEY = os.environ.get('AWS_CLOUDFRONT_KEY', None).encode('ascii')
 AWS_CLOUDFRONT_KEY_ID = os.environ.get('AWS_CLOUDFRONT_KEY_ID', None)
 
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
@@ -178,7 +178,15 @@ WSGI_APPLICATION = 'instagram.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
+
     'default': {
+        'ENGINE': 'django.db.backends.sqlite3', 
+        'NAME': 'db.sqlite3', 
+        'PASSWORD': '', 
+        'USER': ''
+    },
+
+    'prod': {
         'ENGINE': 'django.db.backends.{}'.format(os.getenv('DATABASE_ENGINE', 'sqlite3')),
         'NAME': os.getenv('DATABASE_NAME', BASE_DIR / 'db.sqlite3'),
         'USER': os.getenv('DATABASE_USERNAME', 'pystagramuser'), 

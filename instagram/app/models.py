@@ -145,7 +145,7 @@ class Tag(models.Model):
 
 
 class UserFeed(models.Model): 
-    user_id = models.ForeignKey('User', null=False) 
+    user_id = models.ForeignKey('User', null=False, on_delete=models.CASCADE) 
     posts = models.ManyToManyField('Post', null=False)
     created_at = models.DateTimeField(auto_now_add=True) 
     updated_at = models.DateTimeField(auto_now=True)

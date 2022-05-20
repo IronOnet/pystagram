@@ -1,7 +1,8 @@
 import { useState, useContext, useEffect } from 'react'; 
 import { Link, useNavigate } from 'react-router-dom'; 
-import * as ROUTES from '../constants/routes'; 
-import AxiosContext from '../context/axios'; 
+import * as ROUTES from '../../constants/routes'; 
+import AxiosContext from '../../context/axios'; 
+import {login as loginAction}  from './LoginActions';
 
 
 export default function Login(){
@@ -16,7 +17,15 @@ export default function Login(){
     const isInvalid = password === '' || emailAddress === ''; 
 
     const handleLogin = async (event) =>{
+
+        const userData = {
+            userEmail: emailAddress, 
+            userPassword: password
+        }
         event.preventDefault();
+        console.log("Login button clicked")
+        loginAction(userData, ROUTES.DASHBOARD);
+        //console.log(LoginAction({emailAddress, password}, ROUTES.DASHBOARD));
     }
 
 

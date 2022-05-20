@@ -1,8 +1,9 @@
 import {lazy, Suspense } from "react"; 
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import * as ROUTES_C from './constants/routes';
-import Login from './pages/login.js'; 
+import Login from './pages/login/login.js'; 
 import TestPageView from "./pages/test.js";
+import Signup from "./pages/signup/signup.js";
 
 
 
@@ -27,6 +28,7 @@ function App() {
        <Routes>
          <Route path="/" element={<Index/>}/>
          <Route path="/login" element={<Login/>}/>
+         <Route path="/sign-up" element={<Signup/>}/>
         
          <Route path="/test2" element={<TestPageView/>}/>
         
