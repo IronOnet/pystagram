@@ -20,6 +20,7 @@ export default function SignUp(){
 
     const handleSignup = async (event) =>{
         event.preventDefault();
+        console.log("Signup button clicked!!")
         // logic to handle signup goes here
     }
 
