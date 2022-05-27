@@ -1,5 +1,5 @@
 # pystagram
-    An instagram (clone) API built with djangorestframework
+    An instagram clone built with Django (DRF) and ReactJS
 
 ## System design
 ### What is Instagram?
