@@ -21,7 +21,7 @@ export default function Profile(){
                 navigate(ROUTES.NOT_FOUND)
             }
         }
-        checkUserExists();
+        //checkUserExists();
     }, [username, navigate]);
 
 

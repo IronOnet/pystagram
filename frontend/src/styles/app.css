@@ -805,11 +805,11 @@ input:checked + .toggle-bg {
 .z-40 {
   z-index: 40;
 } 
-.col-span-4 {
-  grid-column: span 4 / span 4;
-} 
 .col-span-2 {
   grid-column: span 2 / span 2;
+} 
+.col-span-4 {
+  grid-column: span 4 / span 4;
 } 
 .col-span-1 {
   grid-column: span 1 / span 1;
@@ -823,6 +823,9 @@ input:checked + .toggle-bg {
 } 
 .mt-12 {
   margin-top: 3rem;
+} 
+.mb-5 {
+  margin-bottom: 1.25rem;
 } 
 .mr-1 {
   margin-right: 0.25rem;
@@ -859,9 +862,6 @@ input:checked + .toggle-bg {
 } 
 .mb-4 {
   margin-bottom: 1rem;
-} 
-.mb-5 {
-  margin-bottom: 1.25rem;
 } 
 .block {
   display: block;

@@ -5,7 +5,8 @@ import Login from './pages/login/login.js';
 import TestPageView from "./pages/test.js";
 import Signup from "./pages/signup/signup.js";
 import NotFound from "./pages/not-found.js";
-import Profile from "./pages/profile/profile.js";
+import Profile from "./pages/profile";
+import Dashboard from "./pages/dashboard";
 
 
 
@@ -33,6 +34,7 @@ function App() {
          <Route path="/sign-up" element={<Signup/>}/>
          <Route path="/not-found" element={<NotFound/>}/>
          <Route path="/profile" element={<Profile/>}/>
+         <Route path="/dashboard" element={<Dashboard/>}/>
          <Route path="/test2" element={<TestPageView/>}/>
         
        </Routes>
